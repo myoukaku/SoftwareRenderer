@@ -12,9 +12,9 @@ class Window
 public:
 	Window(int width, int height, const TCHAR* title)
 	{
-		auto hwnd = Create(width, height, title);
+		m_hwnd = Create(width, height, title);
 
-		::ShowWindow(hwnd, SW_SHOW);
+		::ShowWindow(m_hwnd, SW_SHOW);
 	}
 
 	~Window()
@@ -39,20 +39,33 @@ public:
 		return true;
 	}
 
+	Bitmap* GetBitmap(void) const
+	{
+		return m_bitmap.get();
+	}
+
+	HWND GetHWND(void) const
+	{
+		return m_hwnd;
+	}
+
 private:
 	void OnCreate(HWND hwnd)
 	{
-		auto hdc = GetDC(hwnd);
-		m_bitmap = std::make_unique<Bitmap>(hdc, 800, 600);
-		ReleaseDC(hwnd, hdc);
+		::RECT rect;
+		GetClientRect(hwnd, &rect);
+
+		auto hdc = ::GetDC(hwnd);
+		m_bitmap = std::make_unique<Bitmap>(hdc, rect.right, rect.bottom);
+		::ReleaseDC(hwnd, hdc);
 	}
 
 	void OnPaint(HWND hwnd)
 	{
-		PAINTSTRUCT ps;
+		::PAINTSTRUCT ps;
 		auto hdc = ::BeginPaint(hwnd, &ps);
-		BitBlt(hdc, 0, 0, m_bitmap->width(), m_bitmap->height(), m_bitmap->hdc(), 0, 0, SRCCOPY);
-		EndPaint(hwnd, &ps);
+		::BitBlt(hdc, 0, 0, m_bitmap->width(), m_bitmap->height(), m_bitmap->hdc(), 0, 0, SRCCOPY);
+		::EndPaint(hwnd, &ps);
 	}
 
 	static LRESULT CALLBACK
@@ -154,6 +167,7 @@ private:
 	}
 
 private:
+	HWND						m_hwnd;
 	std::unique_ptr<Bitmap>		m_bitmap;
 };
 

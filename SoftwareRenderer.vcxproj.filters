@@ -17,5 +17,8 @@
     <ClInclude Include="src\bitmap.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\renderer.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
