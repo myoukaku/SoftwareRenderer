@@ -6,7 +6,10 @@ int WINAPI WinMain(
 	LPSTR /*lpCmdLine*/, 
 	int /*nCmdShow*/)
 {
-	sr::Window window(800, 600, L"test");
+	const int width = 800;
+	const int height = 600;
+
+	sr::Window window(width, height, L"test");
 
 	while (window.Update())
 	{

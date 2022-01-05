@@ -1,18 +1,95 @@
 ﻿#pragma once
 
+#include "bitmap.hpp"
 #include <Windows.h>
+#include <memory>
 
 namespace sr
 {
 
 class Window
 {
+public:
+	Window(int width, int height, const TCHAR* title)
+	{
+		auto hwnd = Create(width, height, title);
+
+		::ShowWindow(hwnd, SW_SHOW);
+	}
+
+	~Window()
+	{
+	}
+
+	bool Update()
+	{
+		::MSG msg;
+
+		while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+			{
+				return false;
+			}
+
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+
+		return true;
+	}
+
 private:
+	void OnCreate(HWND hwnd)
+	{
+		auto hdc = GetDC(hwnd);
+		m_bitmap = std::make_unique<Bitmap>(hdc, 800, 600);
+		ReleaseDC(hwnd, hdc);
+	}
+
+	void OnPaint(HWND hwnd)
+	{
+		PAINTSTRUCT ps;
+		auto hdc = ::BeginPaint(hwnd, &ps);
+		BitBlt(hdc, 0, 0, m_bitmap->width(), m_bitmap->height(), m_bitmap->hdc(), 0, 0, SRCCOPY);
+		EndPaint(hwnd, &ps);
+	}
+
 	static LRESULT CALLBACK
 	WndProc(HWND hwnd, UINT msg, WPARAM w_param, LPARAM l_param)
 	{
+		Window* this_ = nullptr;
+
+		if (msg == WM_CREATE)
+		{
+			// Windowクラスへのポインタをセットします。
+			// これはCreateWindowExの引数で渡されたものです。
+			auto const* create_struct = reinterpret_cast<LPCREATESTRUCT>(l_param);
+			this_ = reinterpret_cast<Window*>(create_struct->lpCreateParams);
+			::SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this_));
+		}
+		else
+		{
+			// Windowクラスへのポインタを取得します。
+			// WM_CREATEより前に別のメッセージが来ることがあり、その場合nullptrになることに注意
+			this_ = reinterpret_cast<Window*>(::GetWindowLongPtr(hwnd, GWLP_USERDATA));
+		}
+
+		if (!this_)
+		{
+			return ::DefWindowProc(hwnd, msg, w_param, l_param);
+		}
+
 		switch (msg)
 		{
+		case WM_CREATE:
+			this_->OnCreate(hwnd);
+			break;
+
+		case WM_PAINT:
+			this_->OnPaint(hwnd);
+			break;
+
 		case WM_DESTROY:
 			::PostQuitMessage(0);
 			return 0;
@@ -44,8 +121,7 @@ private:
 		return ::RegisterClassEx(&wc) != 0;
 	}
 
-	static HWND
-	Create(int width, int height, const TCHAR* title)
+	HWND Create(int width, int height, const TCHAR* title)
 	{
 		auto const class_name = L"test window";
 
@@ -74,37 +150,11 @@ private:
 				   0,	// parent
 				   0,	// menu
 				   ::GetModuleHandle(nullptr),
-				   nullptr);
+				   this);
 	}
 
-public:
-	Window(int width, int height, const TCHAR* title)
-	{
-		auto hwnd = Create(width, height, title);
-		::ShowWindow(hwnd, SW_SHOW);
-	}
-
-	~Window()
-	{
-	}
-
-	bool Update()
-	{
-		::MSG msg;
-
-		while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				return false;
-			}
-
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-
-		return true;
-	}
+private:
+	std::unique_ptr<Bitmap>		m_bitmap;
 };
 
 }	// namespace sr
