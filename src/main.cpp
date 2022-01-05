@@ -94,10 +94,10 @@ UpdateWindow()
 }	// namespace sr
 
 int WINAPI WinMain(
-	HINSTANCE hInstance, 
-	HINSTANCE hPrevInstance, 
-	LPSTR lpCmdLine, 
-	int nCmdShow)
+	HINSTANCE /*hInstance*/, 
+	HINSTANCE /*hPrevInstance*/, 
+	LPSTR /*lpCmdLine*/, 
+	int /*nCmdShow*/)
 {
 	auto hwnd = sr::OpenWindow(800, 600, L"test");
 	::ShowWindow(hwnd, SW_SHOW);
