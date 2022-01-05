@@ -69,6 +69,16 @@ public:
 		}
 	}
 
+	std::uint32_t GetColor(int x, int y)
+	{
+		if (0 <= x && x < m_width &&
+			0 <= y && y < m_height)
+		{
+			return m_pixels[y * m_width + x];
+		}
+		return 0;
+	}
+
 private:
 	int				m_width;
 	int				m_height;
