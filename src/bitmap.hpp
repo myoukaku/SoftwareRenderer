@@ -62,7 +62,11 @@ public:
 
 	void SetColor(int x, int y, std::uint32_t col)
 	{
-		m_pixels[y * m_width + x] = col;
+		if (0 <= x && x < m_width &&
+			0 <= y && y < m_height)
+		{
+			m_pixels[y * m_width + x] = col;
+		}
 	}
 
 private:
