@@ -13,14 +13,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		renderer.Begin();
 
-		renderer.DrawLine(400, 300, 800, 300, 0xFF0000);
-		renderer.DrawLine(400, 300, 800,   0, 0x00FF00);
-		renderer.DrawLine(400, 300, 400,   0, 0x0000FF);
-		renderer.DrawLine(400, 300,   0,   0, 0xFFFF00);
-		renderer.DrawLine(400, 300,   0, 300, 0x00FFFF);
-		renderer.DrawLine(400, 300,   0, 600, 0xFF00FF);
-		renderer.DrawLine(400, 300, 400, 600, 0xFFFFFF);
-		renderer.DrawLine(400, 300, 800, 600, 0x808080);
+		renderer.DrawTriangle(400, 50, 50, 550, 750, 550, 0xFF0000);
+
+		//renderer.DrawLine(400, 300, 800, 300, 0xFF0000);
+		//renderer.DrawLine(400, 300, 800,   0, 0x00FF00);
+		//renderer.DrawLine(400, 300, 400,   0, 0x0000FF);
+		//renderer.DrawLine(400, 300,   0,   0, 0xFFFF00);
+		//renderer.DrawLine(400, 300,   0, 300, 0x00FFFF);
+		//renderer.DrawLine(400, 300,   0, 600, 0xFF00FF);
+		//renderer.DrawLine(400, 300, 400, 600, 0xFFFFFF);
+		//renderer.DrawLine(400, 300, 800, 600, 0x808080);
 
 		renderer.End();
 	}

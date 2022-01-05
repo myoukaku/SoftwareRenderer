@@ -56,6 +56,13 @@ public:
 		}
 	}
 
+	void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, std::uint32_t col)
+	{
+		DrawLine(x0, y0, x1, y1, col);
+		DrawLine(x1, y1, x2, y2, col);
+		DrawLine(x2, y2, x0, y0, col);
+	}
+
 private:
 	Window*			m_window;
 	std::uint32_t	m_clear_color = 0x404040;
