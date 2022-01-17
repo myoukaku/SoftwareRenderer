@@ -27,14 +27,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		renderer.Begin();
 
-		//renderer.FillTriangle(400, 50, 50, 550, 750, 550, 0x800000);
-		//renderer.DrawTriangle(400, 50, 50, 550, 750, 550, 0xFFFFFF);
-		//renderer.FillTriangle(750, 50, 750, 550, 50, 300, 0x008000);
-		//renderer.DrawTriangle(400, 50, 50, 300, 750, 550, 0xFFFFFF);
-		//renderer.FillTriangle(50, 50, 750, 50, 400, 550, 0x000080);
+//		renderer.FillTriangle(400, 50, 0xFF0000, 50, 550, 0x00FF00, 750, 550, 0x0000FF);
+		//renderer.DrawTriangle(400, 50, 0xFF0000, 50, 550, 0x00FF00, 750, 550, 0x0000FF);
+//		renderer.FillTriangle(750, 50, 0x800000, 750, 550, 0x008000, 50, 300, 0x0000FF);
+		//renderer.DrawTriangle(400, 50, 0xFFFF00, 50, 300, 0x00FFFF, 750, 550, 0xFFFFFF);
+//		renderer.FillTriangle(50, 50, 0x000080, 750, 50, 0xFF0000, 400, 550, 0x000080);
 		//renderer.FillTriangle(50, 50, 50, 550, 750, 300, 0x00FF00);
 
-		renderer.FillTriangle((int)x0, (int)y0, (int)x1, (int)y1, (int)x2, (int)y2, 0xFFFF00);
+		renderer.FillTriangle(
+			(int)x0, (int)y0, 0xFF0000,
+			(int)x1, (int)y1, 0x00FF00,
+			(int)x2, (int)y2, 0x0000FF);
+
 		x0 += vx0;
 		if (x0 < 0 || width < x0)
 		{
@@ -66,14 +70,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			vy2 = -vy2;
 		}
 
-		//renderer.DrawLine(400, 300, 800, 300, 0xFF0000);
-		//renderer.DrawLine(400, 300, 800,   0, 0x00FF00);
-		//renderer.DrawLine(400, 300, 400,   0, 0x0000FF);
-		//renderer.DrawLine(400, 300,   0,   0, 0xFFFF00);
-		//renderer.DrawLine(400, 300,   0, 300, 0x00FFFF);
-		//renderer.DrawLine(400, 300,   0, 600, 0xFF00FF);
-		//renderer.DrawLine(400, 300, 400, 600, 0xFFFFFF);
-		//renderer.DrawLine(400, 300, 800, 600, 0x808080);
+		//renderer.DrawLine(400, 300, 0xFF0000, 800, 300, 0xFF0000);
+		//renderer.DrawLine(400, 300, 0x00FF00, 800,   0, 0x00FF00);
+		//renderer.DrawLine(400, 300, 0x0000FF, 400,   0, 0x0000FF);
+		//renderer.DrawLine(400, 300, 0xFFFF00,   0,   0, 0xFFFF00);
+		//renderer.DrawLine(400, 300, 0x00FFFF,   0, 300, 0x00FFFF);
+		//renderer.DrawLine(400, 300, 0xFF00FF,   0, 600, 0xFF00FF);
+		//renderer.DrawLine(400, 300, 0xFFFFFF, 400, 600, 0xFFFFFF);
+		//renderer.DrawLine(400, 300, 0x808080, 800, 600, 0x808080);
 
 		renderer.End();
 	}
