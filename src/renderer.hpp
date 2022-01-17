@@ -1,13 +1,22 @@
 ﻿#pragma once
 
 #include "window.hpp"
+#include "vertex.hpp"
+#include "math.hpp"
 #undef min
 #undef max
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 namespace sr
 {
+
+enum class FillMode
+{
+	Solid,
+	Wireframe,
+};
 
 class Renderer
 {
@@ -286,9 +295,61 @@ public:
 		}
 	}
 
+	void Draw(FillMode mode, const std::vector<Vertex>& vertices)
+	{
+		for (std::size_t i = 0; i < vertices.size(); i += 3)
+		{
+			const auto& v0 = vertices[i+0];
+			const auto& v1 = vertices[i+1];
+			const auto& v2 = vertices[i+2];
+
+			const auto p0 = v0.pos * m_viewport_mat;
+			const auto p1 = v1.pos * m_viewport_mat;
+			const auto p2 = v2.pos * m_viewport_mat;
+
+			const std::uint32_t c0 =
+				(std::uint32_t(v0.col.x * 255) << 16) |
+				(std::uint32_t(v0.col.y * 255) <<  8) |
+				 std::uint32_t(v0.col.z * 255);
+			const std::uint32_t c1 =
+				(std::uint32_t(v1.col.x * 255) << 16) |
+				(std::uint32_t(v1.col.y * 255) <<  8) |
+				 std::uint32_t(v1.col.z * 255);
+			const std::uint32_t c2 =
+				(std::uint32_t(v2.col.x * 255) << 16) |
+				(std::uint32_t(v2.col.y * 255) <<  8) |
+				 std::uint32_t(v2.col.z * 255);
+
+			if (mode == FillMode::Solid)
+			{
+				FillTriangle(
+					(int)p0.x, (int)p0.y, c0,
+					(int)p1.x, (int)p1.y, c1,
+					(int)p2.x, (int)p2.y, c2);
+			}
+			else
+			{
+				DrawTriangle(
+					(int)p0.x, (int)p0.y, c0,
+					(int)p1.x, (int)p1.y, c1,
+					(int)p2.x, (int)p2.y, c2);
+			}
+		}
+	}
+
+	void SetViewport(int x, int y, int width, int height)
+	{
+		m_viewport_mat = ViewportMatrix(
+			static_cast<float>(x),
+			static_cast<float>(y),
+			static_cast<float>(width),
+			static_cast<float>(height));
+	}
+
 private:
 	Window*			m_window;
 	std::uint32_t	m_clear_color = 0x808080;
+	Mat4			m_viewport_mat;
 };
 
 }	// namespace sr

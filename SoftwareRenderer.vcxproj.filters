@@ -20,5 +20,11 @@
     <ClInclude Include="src\renderer.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\vertex.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

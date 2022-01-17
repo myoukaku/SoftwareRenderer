@@ -159,7 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bitmap.hpp" />
+    <ClInclude Include="src\math.hpp" />
     <ClInclude Include="src\renderer.hpp" />
+    <ClInclude Include="src\vertex.hpp" />
     <ClInclude Include="src\window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
