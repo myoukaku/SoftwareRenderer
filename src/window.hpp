@@ -39,6 +39,11 @@ public:
 		return true;
 	}
 
+	void SetTitle(const char* str)
+	{
+		::SetWindowTextA(m_hwnd, str);
+	}
+
 	Bitmap* GetBitmap(void) const
 	{
 		return m_bitmap.get();

@@ -3,6 +3,8 @@
 #include "vertex.hpp"
 #include <vector>
 #include <cstdint>
+#include <chrono>
+#include <sstream>
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -79,11 +81,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	float r1 = 0.0f;
 	float r2 = 0.0f;
 
+	auto current_time = std::chrono::system_clock::now();
+
 	while (window.Update())
 	{
+		auto t = std::chrono::system_clock::now();
+		float elapsed_time = std::chrono::duration<float>(t - current_time).count();
+		current_time = t;
+
+		{
+			std::stringstream ss;
+			ss << "SoftwareRenderer: " << elapsed_time << " sec";
+			window.SetTitle(ss.str().c_str());
+		}
+
 		renderer.SetMatrix(sr::RotationXMatrix(r1) * sr::RotationYMatrix(r2));
-		r1 += 0.001f;
-		r2 += 0.002f;
+		r1 += 1.0f * elapsed_time;
+		r2 += 1.1f * elapsed_time;
 
 		renderer.Begin();
 
