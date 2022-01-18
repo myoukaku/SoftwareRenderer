@@ -306,9 +306,17 @@ private:
 
 	void DrawImpl(FillMode mode, const Vertex& v0, const Vertex& v1, const Vertex& v2)
 	{
-		const auto p0 = v0.pos * m_viewport_mat;
-		const auto p1 = v1.pos * m_viewport_mat;
-		const auto p2 = v2.pos * m_viewport_mat;
+		auto p0 = v0.pos;
+		auto p1 = v1.pos;
+		auto p2 = v2.pos;
+
+		p0 = p0 * m_mat;
+		p1 = p1 * m_mat;
+		p2 = p2 * m_mat;
+
+		p0 = p0 * m_viewport_mat;
+		p1 = p1 * m_viewport_mat;
+		p2 = p2 * m_viewport_mat;
 
 		const std::uint32_t c0 = ToColorU32(v0.col);
 		const std::uint32_t c1 = ToColorU32(v1.col);
@@ -359,6 +367,11 @@ public:
 		}
 	}
 
+	void SetMatrix(const Mat4& mat)
+	{
+		m_mat = mat;
+	}
+
 	void SetViewport(int x, int y, int width, int height)
 	{
 		m_viewport_mat = ViewportMatrix(
@@ -371,6 +384,7 @@ public:
 private:
 	Window*			m_window;
 	std::uint32_t	m_clear_color = 0x808080;
+	Mat4			m_mat;
 	Mat4			m_viewport_mat;
 };
 

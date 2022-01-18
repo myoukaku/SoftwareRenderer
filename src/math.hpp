@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+#include <cstddef>
+#include <cmath>
+
 namespace sr
 {
 
@@ -54,6 +57,63 @@ inline Mat4 ViewportMatrix(float x, float y, float w, float h)
 		{ 0,   0,   1, 0 },
 		{ x+w, y+h, 0, 1 },
 	}};
+}
+
+inline Mat4 RotationXMatrix(float r)
+{
+	auto const s = std::sin(r);
+	auto const c = std::cos(r);
+	return
+	{{
+		{ 1,  0,  0,  0 },
+		{ 0,  c,  s,  0 },
+		{ 0, -s,  c,  0 },
+		{ 0,  0,  0,  1 },
+	}};
+}
+
+inline Mat4 RotationYMatrix(float r)
+{
+	auto const s = std::sin(r);
+	auto const c = std::cos(r);
+	return
+	{{
+		{ c,  0, -s,  0 },
+		{ 0,  1,  0,  0 },
+		{ s,  0,  c,  0 },
+		{ 0,  0,  0,  1 },
+	}};
+}
+
+inline Mat4 RotationZMatrix(float r)
+{
+	auto const s = std::sin(r);
+	auto const c = std::cos(r);
+	return
+	{{
+		{  c,  s,  0,  0 },
+		{ -s,  c,  0,  0 },
+		{  0,  0,  1,  0 },
+		{  0,  0,  0,  1 },
+	}};
+}
+
+inline Mat4 operator*(const Mat4& lhs, const Mat4& rhs)
+{
+	Mat4 result{};
+
+	for (std::size_t i = 0; i < 4; ++i)
+	{
+		for (std::size_t j = 0; j < 4; ++j)
+		{
+			for (std::size_t k = 0; k < 4; ++k)
+			{
+				result.m[i][j] += lhs.m[i][k] * rhs.m[k][j];
+			}
+		}
+	}
+
+	return result;
 }
 
 inline Vec4 operator*(const Vec4& v, const Mat4& m)

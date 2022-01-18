@@ -76,8 +76,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		20+1, 20+2, 20+3,
 	};
 
+	float r1 = 0.0f;
+	float r2 = 0.0f;
+
 	while (window.Update())
 	{
+		renderer.SetMatrix(sr::RotationXMatrix(r1) * sr::RotationYMatrix(r2));
+		r1 += 0.001f;
+		r2 += 0.002f;
+
 		renderer.Begin();
 
 		renderer.Draw(sr::FillMode::Solid, vertices, indices);
