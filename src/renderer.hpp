@@ -295,6 +295,42 @@ public:
 		}
 	}
 
+private:
+	std::uint32_t ToColorU32(const Vec3& col) const
+	{
+		return
+			(std::uint32_t(col.x * 255) << 16) |
+			(std::uint32_t(col.y * 255) <<  8) |
+			(std::uint32_t(col.z * 255));
+	}
+
+	void DrawImpl(FillMode mode, const Vertex& v0, const Vertex& v1, const Vertex& v2)
+	{
+		const auto p0 = v0.pos * m_viewport_mat;
+		const auto p1 = v1.pos * m_viewport_mat;
+		const auto p2 = v2.pos * m_viewport_mat;
+
+		const std::uint32_t c0 = ToColorU32(v0.col);
+		const std::uint32_t c1 = ToColorU32(v1.col);
+		const std::uint32_t c2 = ToColorU32(v2.col);
+
+		if (mode == FillMode::Solid)
+		{
+			FillTriangle(
+				(int)p0.x, (int)p0.y, c0,
+				(int)p1.x, (int)p1.y, c1,
+				(int)p2.x, (int)p2.y, c2);
+		}
+		else
+		{
+			DrawTriangle(
+				(int)p0.x, (int)p0.y, c0,
+				(int)p1.x, (int)p1.y, c1,
+				(int)p2.x, (int)p2.y, c2);
+		}
+	}
+
+public:
 	void Draw(FillMode mode, const std::vector<Vertex>& vertices)
 	{
 		for (std::size_t i = 0; i < vertices.size(); i += 3)
@@ -303,37 +339,23 @@ public:
 			const auto& v1 = vertices[i+1];
 			const auto& v2 = vertices[i+2];
 
-			const auto p0 = v0.pos * m_viewport_mat;
-			const auto p1 = v1.pos * m_viewport_mat;
-			const auto p2 = v2.pos * m_viewport_mat;
+			DrawImpl(mode, v0, v1, v2);
+		}
+	}
 
-			const std::uint32_t c0 =
-				(std::uint32_t(v0.col.x * 255) << 16) |
-				(std::uint32_t(v0.col.y * 255) <<  8) |
-				 std::uint32_t(v0.col.z * 255);
-			const std::uint32_t c1 =
-				(std::uint32_t(v1.col.x * 255) << 16) |
-				(std::uint32_t(v1.col.y * 255) <<  8) |
-				 std::uint32_t(v1.col.z * 255);
-			const std::uint32_t c2 =
-				(std::uint32_t(v2.col.x * 255) << 16) |
-				(std::uint32_t(v2.col.y * 255) <<  8) |
-				 std::uint32_t(v2.col.z * 255);
+	void Draw(FillMode mode, const std::vector<Vertex>& vertices, const std::vector<std::uint32_t>& indices)
+	{
+		for (std::size_t i = 0; i < indices.size(); i += 3)
+		{
+			const auto i0 = indices[i+0];
+			const auto i1 = indices[i+1];
+			const auto i2 = indices[i+2];
 
-			if (mode == FillMode::Solid)
-			{
-				FillTriangle(
-					(int)p0.x, (int)p0.y, c0,
-					(int)p1.x, (int)p1.y, c1,
-					(int)p2.x, (int)p2.y, c2);
-			}
-			else
-			{
-				DrawTriangle(
-					(int)p0.x, (int)p0.y, c0,
-					(int)p1.x, (int)p1.y, c1,
-					(int)p2.x, (int)p2.y, c2);
-			}
+			const auto& v0 = vertices[i0];
+			const auto& v1 = vertices[i1];
+			const auto& v2 = vertices[i2];
+
+			DrawImpl(mode, v0, v1, v2);
 		}
 	}
 
